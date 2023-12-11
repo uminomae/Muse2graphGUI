@@ -1,13 +1,16 @@
 # Muse2graph
 
+<img width="342" alt="スクリーンショット 2023-12-11 19 27 34" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c2d1e895-a9ac-4a73-a128-efe1808132bb">
+
+
 # 機能：
 - macのダウンロードディレクトリにある.zipファイルからグラフを作成します。
 - 移動平均線は直近5つのデータポイントとの平均です。
-<img width="900" alt="mindMonitor_2023-12-03--22-22-3" src="https://github.com/uminomae/Muse2graph/assets/101631407/ed6034ab-c33a-484f-b6a1-78859f2832ad">
+<img width="1612" alt="スクリーンショット 2023-12-11 19 28 17" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c44eeab3-8fe9-4454-9806-b33fd4b8f2c1">
 
 # 使い方：
 ## 事前準備
-1. ファイル群を適当な場所に保存してください。同じディレクトリにある必要があります。
+1. ファイル群を適当な場所(例:~/Documents/Muse2)に保存してください。同じディレクトリにある必要があります。
 	- main.pyなど
 	- ※saved_plots,extracted_dataディレクトリは自動で作成されます。
 
