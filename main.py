@@ -69,13 +69,11 @@ class MuseDataAnalysisApp(ctk.CTk):
         self.destroy()  # ウィンドウを破壊。
     def on_file_select(self):
         """ ファイル選択ボタンが押された時のイベントハンドラ。 """
-        file_selection_process(
-            self, self.select_button_ui.select_button, self.file_label, self.selected_file_path_var)
+        file_selection_process(self.file_label, self.selected_file_path_var, self.select_button_ui.select_button)
     def on_create_graph(self, event=None):
         """ グラフ作成ボタンが押された時のイベントハンドラ。 """
         create_graph(
             self, self.process_button_ui.process_button, self.title_entry, self.data_span_entry, self.selected_file_path_var, self.file_label, self.select_button_ui.select_button)
-
 
 def main():
     app = MuseDataAnalysisApp()
