@@ -1,99 +1,115 @@
 import pandas as pd
+import sys
 import os
+# 親ディレクトリのパスをシステムパスに追加
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import options
 
 def read_data(csv_file_path):
-    # CSVファイルを読み込む関数
     try:
         return pd.read_csv(csv_file_path)
-    except FileNotFoundError:
-        print(f"ファイルが見つかりません: {csv_file_path}")
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"ファイルが見つかりません: {csv_file_path}") from e
+
+def prepare_data(data):
+    required_columns = ['TimeStamp']  # 必要な列のリスト
+    missing_columns = [col for col in required_columns if col not in data.columns]
+    if missing_columns:
+        print(f"必要な列が不足しています: {missing_columns}")
         return None
 
-def filter_recent_data(data, data_span, selection_type):
-# def filter_recent_data(data, data_span):
-    # 与えられたデータから、最近のデータを特定の時間範囲でフィルタリングする。
-    # TimeStamp列を必要とする。
-    if 'TimeStamp' in data.columns:
+    try:
         data['TimeStamp'] = pd.to_datetime(data['TimeStamp'])
-        data.set_index('TimeStamp', inplace=True)
+    except Exception as e:
+        print("TimeStamp 列の変換に失敗しました。", e)
+        return None
+
+    data.set_index('TimeStamp', inplace=True)
+    return data
+
+def calculate_time_range(data_index, time_range_minutes, time_selection_mode):
+    """ 時間範囲を計算する関数 """
+    if time_range_minutes < 0:
+        print("Error: 時間範囲は正の値でなければなりません。")
+        return None, None
+    if time_range_minutes == 0:
+        return data_index.min(), data_index.max()
+    if time_selection_mode == "recent":
+        end_time = data_index.max()
+        start_time = end_time - pd.Timedelta(minutes=time_range_minutes)
     else:
-        print("Error: 'TimeStamp' column not found in the data.")
+        start_time = data_index.min()
+        end_time = start_time + pd.Timedelta(minutes=time_range_minutes)
+    return start_time, end_time
+
+def filter_data_by_time_range(data, start_time, end_time):
+    """ 指定された時間範囲でデータをフィルタリングする """
+    filtered_data = data.loc[start_time:end_time]
+    if filtered_data.empty:
+        print(f"選択された時間範囲 {start_time} から {end_time} にデータが存在しません。")
         return None, None, None
-
-    # data_spanが0の場合は全データを返す
-    if data_span == 0:
-        return data, data.index.max(), data.index.min()
     
-    if selection_type == "recent":
-        # 最新のデータから過去に遡ってデータを取得
-        end_time = data.index.max()
-        start_time = end_time - pd.Timedelta(minutes=data_span)
-    else:  # "first"の場合
-        # データの開始から特定の時間範囲のデータを取得
-        start_time = data.index.min()
-        end_time = start_time + pd.Timedelta(minutes=data_span)
+    last_index = filtered_data.last_valid_index()
+    first_index = filtered_data.first_valid_index()
+    return filtered_data, last_index, first_index
 
-
-    recent_data = data.loc[start_time:end_time]
-
-    return recent_data, end_time, start_time
-
-def check_required_columns(recent_data, required_columns):
-    # データに必要な列が含まれているかどうかをチェックする。
-    missing_columns = [col for col in required_columns if col not in recent_data.columns]
-    if missing_columns:
-        print(f"Missing columns: {missing_columns}")
-        return False
-    return True
-
-def calculate_averages(recent_data):
+def calculate_averages(filtered_data):
     # 各脳波の平均値を計算する。
     for wave in ['Delta', 'Theta', 'Alpha', 'Beta', 'Gamma']:
         col_names = [f'{wave}_{loc}' for loc in ['TP9', 'AF7', 'AF8', 'TP10']]
-        recent_data[f'Average_{wave}'] = recent_data[col_names].mean(axis=1)
-    return recent_data
+        filtered_data[f'Average_{wave}'] = filtered_data[col_names].mean(axis=1)
+    return filtered_data
 
-def resample_and_rolling_average(data, window_size=6):
+def resample_and_rolling_average(data, window_size):
     """
     データをリサンプリングし、移動平均を計算する。
-    Args:
-        data (DataFrame): 処理するデータ
         window_size (int): 移動平均のウィンドウサイズ
-    Returns:
-        Tuple[DataFrame, datetime]: リサンプリングされたデータ、有効な開始時刻
     """
     resampled_data = data.resample('10S').mean()
-    valid_start_time = resampled_data.first_valid_index()
-    if valid_start_time is None:
-        print("No valid start time found.")
-        return None, None
-    resampled_data['Elapsed_Minutes'] = (resampled_data.index - valid_start_time).total_seconds() / 60
+
+    # Elapsed_Minutes の計算
+    start_time = resampled_data.index.min()  # リサンプリングされたデータの最初の時刻を使用
+    resampled_data['Elapsed_Minutes'] = (resampled_data.index - start_time).total_seconds() / 60
+
     for wave in ['Delta', 'Theta', 'Alpha', 'Beta', 'Gamma']:
         resampled_data[f'Rolling_Avg_{wave}'] = resampled_data[f'Average_{wave}'].rolling(window=window_size).mean()
-    return resampled_data, valid_start_time
+    if resampled_data.empty:
+        return None
+    return resampled_data
 
-def process_data(csv_file_path, data_span, selection_type):
-# def process_data(csv_file_path, data_span):
-    # CSVファイルを読み込み、データを処理するメイン関数。
-    data = read_data(csv_file_path)
-    if data is None:
+def process_brainwave_data(csv_file_path, time_range, mode):
+    try:
+        data = read_data(csv_file_path)
+    except FileNotFoundError as e:
+        print(e)
         return None, None, None
     
-    recent_data, end_time, start_time = filter_recent_data(data, data_span, selection_type)
-    # recent_data, end_time, start_time = filter_recent_data(data, data_span)
+    data = prepare_data(data)
+    if data is None:
+        print("データの準備に失敗しました。")
+        return None, None, None
 
-    required_columns = [
-    'Delta_TP9', 'Delta_AF7', 'Delta_AF8', 'Delta_TP10',
-    'Theta_TP9', 'Theta_AF7', 'Theta_AF8', 'Theta_TP10',
-    'Alpha_TP9', 'Alpha_AF7', 'Alpha_AF8', 'Alpha_TP10',
-    'Beta_TP9', 'Beta_AF7', 'Beta_AF8', 'Beta_TP10',
-    'Gamma_TP9', 'Gamma_AF7', 'Gamma_AF8', 'Gamma_TP10',
-    'RAW_TP9', 'RAW_AF7', 'RAW_AF8', 'RAW_TP10',
-    ]
-    if not check_required_columns(recent_data, required_columns):
+    # 時間範囲の計算
+    start_time, end_time = calculate_time_range(data.index, time_range, mode)
+    if start_time is None or end_time is None:
+        print("時間範囲の計算に失敗しました。")
         return None, None, None
-    recent_data = calculate_averages(recent_data.select_dtypes(include=['float64', 'int64']))
-    resampled_recent_data, valid_start_time = resample_and_rolling_average(recent_data)
-    if resampled_recent_data is None:
+    
+    # データのフィルタリング
+    filtered_data, actual_end_time, actual_start_time = filter_data_by_time_range(data, start_time, end_time)
+    if filtered_data is None or filtered_data.empty:
+        print("時間範囲によるフィルタリングに失敗しました。")
         return None, None, None
-    return resampled_recent_data, end_time, valid_start_time
+
+    # 平均値を求める
+    filtered_data = calculate_averages(filtered_data.select_dtypes(include=['float64', 'int64']))
+
+    # 10秒間隔で平均化、移動平均をwindow_sizeのデータポイント数で求める
+    window_size = getattr(options, 'DATA_WINDOW_SIZE', 6) # options.DATA_WINDOW_SIZEが不適切な場合にデフォルトで6
+    resampled_data = resample_and_rolling_average(filtered_data, window_size)
+    if resampled_data is None:
+        print("データのリサンプリングと移動平均の計算に失敗しました。")
+        return None, None, None
+
+    return resampled_data, actual_end_time, actual_start_time
+

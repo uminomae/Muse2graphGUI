@@ -8,11 +8,6 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import options
 
-
-# def update_title_from_option(title_var, title_entry):
-# 	title_entry.delete(0, ctk.END)
-# 	title_entry.insert(0, title_var.get())
-
 class TitleEntry(ctk.CTkFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, fg_color=options.COLORS["window_background"], **kwargs)

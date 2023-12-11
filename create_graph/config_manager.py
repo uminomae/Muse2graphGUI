@@ -1,10 +1,9 @@
 import pickle
 import os
 
-CONFIG_FILE = 'app_config.pkl'
+CONFIG_FILE = 'config/app_config.pkl'
 
 def save_config(graph_title, data_span, selection_type):
-# def save_config(graph_title, data_span):
     configure = {
         'graph_title': graph_title,
         'data_span': data_span,

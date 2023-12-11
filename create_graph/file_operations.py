@@ -32,23 +32,26 @@ def find_csv(extract_to, base_name):
 	if not os.path.exists(csv_file):
 		messagebox.showerror("Error", "CSVファイルが見つかりません。")
 		return None
+	# 保存されたファイルのパスをコンソールに出力する。
+	print("Create CSV file: ", csv_file)
 	return csv_file
 
+
 def process_zip_file(selected_file_path):
-	zip_file = selected_file_path or get_latest_zip(os.path.expanduser("~/Downloads"))
-	if not zip_file:
-		print("No ZIP file found")
-		return None, None
+    zip_file = selected_file_path or get_latest_zip(os.path.expanduser("~/Downloads"))
+    if not zip_file:
+        messagebox.showerror("Error", "No ZIP file found.")
+        return None, None, None
 
-	base_name = os.path.splitext(os.path.basename(zip_file))[0]
-	if not unzip_file(zip_file, options.EXTRACTED_DATA_DIR):
-		return None, None
+    base_name = os.path.splitext(os.path.basename(zip_file))[0]
+    if not unzip_file(zip_file, options.EXTRACTED_DATA_DIR):
+        return None, None, None
 
-	csv_file = find_csv(options.EXTRACTED_DATA_DIR, base_name)
-	if not csv_file:
-		return None, None
+    csv_file = find_csv(options.EXTRACTED_DATA_DIR, base_name)
+    if not csv_file:
+        return None, None, None
 
-	return zip_file, csv_file, base_name
+    return zip_file, csv_file, base_name
 
 def get_png_file_name(csv_file):
 	# 拡張子を除いたファイル名を取得
