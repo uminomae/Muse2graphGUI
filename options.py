@@ -1,5 +1,5 @@
 window_width = 230 
-window_height = 400 
+window_height = 460 
 
 DATA_WINDOW_SIZE = 6
 
@@ -12,6 +12,8 @@ TITLE_OPTIONS = ['meditation', 'meditation deep', 'sleeping', 'coding', 'gaming(
 EXTRACTED_DATA_DIR = "data/extracted_data"
 # 保存するディレクトリのパス
 SAVE_DIRECTORY = 'data/saved_plots'
+# 前回出力時の設定を保存するファイル
+CONFIG_FILE = 'config/app_config.pkl'
 
 REQUIRED_COLUMNS = [
     'Delta_TP9', 'Delta_AF7', 'Delta_AF8', 'Delta_TP10',

@@ -45,13 +45,13 @@ class MuseDataAnalysisApp(ctk.CTk):
         self.data_span_entry.set_selection(self.config.get('selection_type', 'recent'))
     def create_file_selection_ui(self):
         self.select_button_ui = SelectButtonUI(self, self.selected_file_path_var, self.on_file_select)
-        self.file_label = ctk.CTkLabel(self, text="未選択の場合:ダウンロード/内の\n最新の.zipを自動選択", text_color=options.COLORS["label_text"], fg_color='transparent')
+        self.file_label = ctk.CTkLabel(self, text="未選択時: \nダウンロード内最新.zip自動選択\nAuto-select latest .zip \nin Downloads if none chosen", text_color=options.COLORS["label_text"], fg_color='transparent')
         self.file_label.pack(anchor='center', pady=(0,0))
     def create_process_button_ui(self):
         self.process_button_ui = ProcessButtonUI(self, self.on_create_graph)
 
     def on_key_pressed(self, event=None, option_value=''):
-        """ キーが押されたときにオプションメニューの値を設定する """
+        # キーが押されたときにオプションメニューの値を設定する
         self.title_entry.title_option_menu.set(option_value)
     def bind_key_events(self):
         # """ キーイベントをバインドする """

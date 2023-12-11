@@ -1,7 +1,14 @@
 # Muse2graph
-GUI  
-<img width="342" alt="スクリーンショット 2023-12-11 19 27 34" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c2d1e895-a9ac-4a73-a128-efe1808132bb">  
-class  
+## 概要
+Muse2とMind Monitorアプリを使って取得したデータからグラフを出力するプログラムです。  
+
+【Muse (headband) - Wikipedia】 https://en.wikipedia.org/wiki/Muse_(headband)  
+【Mind Monitor】 https://mind-monitor.com/
+
+### GUI  
+<img width="342" alt="スクリーンショット 2023-12-12 6 19 07" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/a3de6cfc-e8e1-485b-a957-c3555febe7ef">  
+
+### class  
 <img width="1178" alt="2023-12-10_21 42 04" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/f68d454c-978a-468c-a05d-fb85d96ffdee">  
 
 # 機能：
@@ -30,7 +37,7 @@ class
 ```bash 
 	cd ~/Documents/Muse2graphGUI-main; python3 main.py
 ```
-<img width="342" alt="スクリーンショット 2023-12-11 19 27 34" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c2d1e895-a9ac-4a73-a128-efe1808132bb">  
+<img width="342" alt="スクリーンショット 2023-12-12 6 19 07" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/a3de6cfc-e8e1-485b-a957-c3555febe7ef">  
 
 ## データの保存先 
 ※ディレクトリは自動で作成されます  
@@ -41,4 +48,3 @@ class
 
 # 参考
 参考:【Muse2（BMI）で脳波を測ってみた！ | TECH | NRI Digital】 https://www.nri-digital.jp/tech/20211228-7840/  
-参考:【Mind Monitor】 https://mind-monitor.com/Chart.php  
