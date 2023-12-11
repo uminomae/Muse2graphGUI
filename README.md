@@ -1,7 +1,7 @@
 # Muse2graph
 
 <img width="342" alt="スクリーンショット 2023-12-11 19 27 34" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c2d1e895-a9ac-4a73-a128-efe1808132bb">
-
+<img width="1178" alt="2023-12-10_21 42 04" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/f68d454c-978a-468c-a05d-fb85d96ffdee">
 
 # 機能：
 - macのダウンロードディレクトリにある.zipファイルからグラフを作成します。
