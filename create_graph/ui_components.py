@@ -15,7 +15,7 @@ class TitleEntry(ctk.CTkFrame):
         self.graph_title_var = ctk.StringVar(value=options.DEFAULT_GRAPH_TITLE)
         self.create_widgets()
     def create_widgets(self):
-        self.title_label = ctk.CTkLabel(self, text="Graph Title: 入力or選択", text_color=options.COLORS["label_text"])
+        self.title_label = ctk.CTkLabel(self, text="Graph Title: \nEnter or Select,入力or選択", text_color=options.COLORS["label_text"])
         self.title_label.pack(anchor='center', pady=2)
 
         self.title_entry = ctk.CTkEntry(self, fg_color=options.COLORS["entry_foreground"], text_color=options.COLORS["text"], textvariable=self.graph_title_var)
@@ -38,16 +38,21 @@ class DataSpanEntry(ctk.CTkFrame):
         self.create_widgets()
     def create_widgets(self):
         # ラベル
-        self.data_span_label = ctk.CTkLabel(self, text="Data Span: 単位:分\n0=全てのデータポイントを取得", text_color=options.COLORS["label_text"])
+        self.data_span_label = ctk.CTkLabel(self, text="Data Span: minutes\n0=all,全データ", text_color=options.COLORS["label_text"])
         self.data_span_label.pack(anchor='center', pady=2)
         # ラジオボタン
-        self.radio_recent = ctk.CTkRadioButton(self, text="Recent(最後の)", value="recent", text_color=options.COLORS["label_text"], variable=self.selection_var)
+        self.radio_recent = ctk.CTkRadioButton(self, text="Recent(直近の)", value="recent", text_color=options.COLORS["label_text"], variable=self.selection_var)
         self.radio_recent.pack(side='top', fill='x', pady=2, padx=(10, 10), anchor='w')
         self.radio_first = ctk.CTkRadioButton(self, text="First(最初の)", value="first", text_color=options.COLORS["label_text"], variable=self.selection_var)
         self.radio_first.pack(side='top', fill='x', pady=(2,5), padx=(10, 10), anchor='w')
         # データスパンの入力フィールド
-        self.data_span_entry = ctk.CTkEntry(self, fg_color=options.COLORS["entry_foreground"], text_color=options.COLORS["text"], textvariable=self.data_span_var)
-        self.data_span_entry.pack(anchor='center', pady=0)
+        self.data_span_entry = ctk.CTkEntry(self, width=120, fg_color=options.COLORS["entry_foreground"], text_color=options.COLORS["text"], textvariable=self.data_span_var)
+         # 分 (minutes) ラベルを追加
+        self.minutes_label = ctk.CTkLabel(self, text="分", text_color=options.COLORS["label_text"])
+        self.minutes_label.pack(side='right', pady=2, padx=(5, 0))  # 右側に余白を追加
+        # 既存のウィジェットを左側に配置するために side='left' を追加
+        self.data_span_entry.pack(side='left', anchor='center', pady=2)
+        # self.data_span_entry.pack(anchor='center', pady=0)
     def get(self):
         return self.data_span_entry.get()
     def get_data_span_var(self):
@@ -84,5 +89,8 @@ class ProcessButtonUI(ctk.CTkFrame):
         process_button_image = Image.open("img/graph.png")
         process_button_image = CTkImage(process_button_image)
         self.process_button = ctk.CTkButton(self, image=process_button_image, text="Create Graph", fg_color=options.COLORS["create_button"], hover_color=options.COLORS["button_hover"])
-        self.process_button.pack(anchor='center', pady=10)
+        self.process_button.pack(anchor='center', pady=(10,0))
         self.process_button.configure(command=self.on_create_graph_command)
+        # Enterキーの説明テキスト
+        self.enter_instruction_label = ctk.CTkLabel(self, text="Press Return to output graph\nReturnキーでグラフ出力", text_color=options.COLORS["label_text"])
+        self.enter_instruction_label.pack(anchor='center', pady=(0, 10))  # 下に余白を追加
