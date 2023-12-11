@@ -24,7 +24,7 @@ class
 <img width="300" alt="スクリーンショット 2023-12-06 9 10 12" src="https://github.com/uminomae/Muse2graph/assets/101631407/dd0114c0-6a35-40c6-9cfb-84a5210bb1aa">  
 
 ## ターミナルでのbashによる操作
-1. ターミナル上でzipを解凍して作成されたディレクトリに移動してください  
+1. ターミナル上でcloneした(zipをDLした場合、解凍して作成された)ディレクトリに移動してください  
 1. python3 main.pyを実行してください。GUIが起動します。  
 例:
 ```bash 
@@ -32,7 +32,8 @@ class
 ```
 <img width="342" alt="スクリーンショット 2023-12-11 19 27 34" src="https://github.com/uminomae/Muse2graphGUI/assets/101631407/c2d1e895-a9ac-4a73-a128-efe1808132bb">  
 
-## データの保存先 ※ディレクトリは自動で作成されます
+## データの保存先 
+※ディレクトリは自動で作成されます  
 - saved_plots/ 
 	- グラフ画像 (PNG)
 - extracted_data/ 
