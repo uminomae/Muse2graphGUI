@@ -54,13 +54,10 @@ class MuseDataAnalysisApp(ctk.CTk):
         # キーが押されたときにオプションメニューの値を設定する
         self.title_entry.title_option_menu.set(option_value)
     def bind_key_events(self):
-        # """ キーイベントをバインドする """
         self.bind("<Return>", self.on_create_graph)
-        self.bind('<Control-c>', lambda event: self.on_key_pressed(event, 'coding'))
-        self.bind('<Control-m>', lambda event: self.on_key_pressed(event, 'meditation'))
-        self.bind('<Control-d>', lambda event: self.on_key_pressed(event, 'meditation deep'))
-        self.bind('<Control-s>', lambda event: self.on_key_pressed(event, 'sleeping'))
-        self.bind('<Control-g>', lambda event: self.on_key_pressed(event, 'gaming(TPS)'))
+        # キーイベントをバインドする
+        for key, value in options.KEY_BINDINGS.items():
+            self.bind(key, lambda event, value=value: self.on_key_pressed(event, value))
 
     def on_close(self):
         """ アプリケーション終了時のクリーンアップ処理を行うメソッド。 """
